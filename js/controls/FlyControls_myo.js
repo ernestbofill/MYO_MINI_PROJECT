@@ -56,10 +56,10 @@ THREE.FlyControls = function ( object, domElement ) {
 
               current_axis='x'}
           else
-{              self.moveState.pitchDown = self.moveState.yawLeft;
+{              self.moveState.pitchDown = self.moveState.rollLeft;
             	self.moveState.yawLeft = 0
 
-              self.moveState.pitchUp = self.moveState.yawRight;
+              self.moveState.pitchUp = self.moveState.rollRight;
             	self.moveState.yawRight = 0
 
               current_axis='y'}

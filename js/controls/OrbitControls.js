@@ -47,7 +47,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	// Set to true to disable this control
 	this.noRotate = false;
-	this.rotateSpeed = 1.0;
+	this.rotateSpeed = 0.01;
 
 	// Set to true to disable this control
 	this.noPan = false;
@@ -699,6 +699,60 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	// force an update at start
 	this.update();
+
+	var initMyo = function() {
+		"use strict";
+
+		window.hub = new Myo.Hub();
+		var current_axis='x'
+		var current_speed=0
+
+		function switchAxis() {
+			if (current_axis=='y') {
+				current_axis='x'
+			}
+			else {
+				current_axis='y'
+			}
+		}
+
+		function stopMotion() {
+			current_speed = 0
+		}
+
+		window.hub.on('frame', function(frame) {
+			if (current_axis=='x') {
+				scope.rotateLeft(current_speed * scope.rotateSpeed)
+			}
+			else {
+						scope.rotateUp(current_speed * scope.rotateSpeed)
+			}
+
+			if(frame.pose) {
+				switch(frame.pose.type) {
+					case frame.pose.POSE_WAVE_IN:
+					console.log("wave_in")
+					current_speed = -1
+					break;
+
+					case frame.pose.POSE_WAVE_OUT:
+					current_speed = 1
+					break;
+
+					case frame.pose.POSE_FINGERS_SPREAD:
+					console.log("fingers_spread")
+					stopMotion()
+					break;
+
+					case frame.pose.POSE_FIST:
+					console.log("fist")
+					switchAxis()
+					break;
+				}
+			}
+		});
+	};
+	initMyo()
 
 };
 
